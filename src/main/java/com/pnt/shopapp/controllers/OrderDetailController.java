@@ -1,4 +1,4 @@
-package com.pnt.shopapp.controller;
+package com.pnt.shopapp.controllers;
 
 import com.pnt.shopapp.dtos.OrderDetailDTO;
 import jakarta.validation.Valid;

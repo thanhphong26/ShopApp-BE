@@ -1,8 +1,7 @@
-package com.pnt.shopapp.controller;
+package com.pnt.shopapp.controllers;
 
 import com.pnt.shopapp.dtos.CategoryDTO;
 import jakarta.validation.Valid;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

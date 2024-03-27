@@ -1,10 +1,8 @@
-package com.pnt.shopapp.controller;
+package com.pnt.shopapp.controllers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pnt.shopapp.dtos.UserDTO;
 import com.pnt.shopapp.dtos.UserLoginDTO;
 import jakarta.validation.Valid;
-import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

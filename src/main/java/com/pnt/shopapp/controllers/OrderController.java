@@ -1,7 +1,6 @@
-package com.pnt.shopapp.controller;
+package com.pnt.shopapp.controllers;
 
 import com.pnt.shopapp.dtos.OrderDTO;
-import com.pnt.shopapp.dtos.UserDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
