@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 @Entity
 @Table(name = "orders")
@@ -31,10 +32,9 @@ public class Order {
     private String note;
 
     @Column(name = "order_date")
-    private Timestamp orderDate;
+    private Date orderDate;
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private OrderStatus oderStatus;
+    private String oderStatus;
     @Column(name = "total_money")
     private Float totalMoney;
     @Column(name="shipping_method", length = 100)
@@ -42,9 +42,9 @@ public class Order {
     @Column(name="shipping_address", length=100)
     private String shippingAddress;
     @Column(name="shipping_date")
-    private Date shippingDate;
+    private LocalDate shippingDate;
     @Column(name="active")
-    private byte active;
+    private Boolean active;//thuộc về admin
     @Column(name="tracking_number", length=100)
     private String trackingNumber;
     @Column(name="payment_method", length=100)

@@ -1,7 +1,11 @@
 package com.pnt.shopapp.controllers;
 
 import com.pnt.shopapp.dtos.OrderDTO;
+import com.pnt.shopapp.exceptions.DataNotFoundException;
+import com.pnt.shopapp.models.Order;
+import com.pnt.shopapp.services.IOrderService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -11,7 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/orders")
+@RequiredArgsConstructor
 public class OrderController {
+    private final IOrderService orderService;
     @PostMapping("")
     public ResponseEntity<?> createOrder(@Valid @RequestBody  OrderDTO orderDTO, BindingResult bindingResult) {
         try {
@@ -21,7 +27,8 @@ public class OrderController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessage);
             }
-            return ResponseEntity.ok("Create order successfully!");
+            Order oderResponse = orderService.createOrder(orderDTO);
+            return ResponseEntity.ok(oderResponse);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -29,7 +36,8 @@ public class OrderController {
     @GetMapping("/{user_id}")
     public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId){
         try{
-            return ResponseEntity.ok("Lay ra danh sach order cua "+userId);
+            List<Order> ordersOfUser=orderService.findByUserId(userId);
+            return ResponseEntity.ok(ordersOfUser);
         }catch(Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -43,7 +51,8 @@ public class OrderController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessage);
             }
-            return ResponseEntity.ok("Update order successfully");
+            Order order = orderService.updateOrder(id, orderDTO);
+            return ResponseEntity.ok(order);
         }catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -51,6 +60,7 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@Valid @PathVariable Long id){
         //xoa mem -> update activity=false
+        orderService.deleteOrder(id);
         return ResponseEntity.ok("Delete order successfully");
     }
 }
