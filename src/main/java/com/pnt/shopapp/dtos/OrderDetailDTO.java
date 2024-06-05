@@ -17,7 +17,7 @@ public class OrderDetailDTO {
     @Min(value=0,message = "Số lượng phải lớn hơn 0")
     private int quantity;
     @Min(value = 0, message = "Price of product must be >=0")
-    private Long price;
+    private Float price;
     @Min(value = 0, message = "Total money must be >=0")
     @JsonProperty("total_money")
     private float totalMoney;

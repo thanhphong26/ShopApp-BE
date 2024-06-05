@@ -18,9 +18,10 @@ spring:
       max-request-size: 10MB
 api:
   prefix: api/v1
-
 logging:
   level:
     root: info
 jwt:
   expiration: 2592000
+  secretKey: eapsM0qzCND33dp7alzC/tKpFmm98TANq7ESjATtyA0=
+

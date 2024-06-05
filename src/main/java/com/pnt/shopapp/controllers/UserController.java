@@ -2,6 +2,7 @@ package com.pnt.shopapp.controllers;
 
 import com.pnt.shopapp.dtos.UserDTO;
 import com.pnt.shopapp.dtos.UserLoginDTO;
+import com.pnt.shopapp.models.User;
 import com.pnt.shopapp.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,12 @@ public class UserController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
-                return ResponseEntity.badRequest().body("Password and RetypePassword not match");
-            }
-            userService.createUser(userDTO);
-           return ResponseEntity.ok("Register Successfully");
+           if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
+               return ResponseEntity.badRequest().body("Password does not match");
+           }
+           User user = userService.createUser(userDTO);
+           //return ResponseEntity.o k("Register successfully");
+           return ResponseEntity.ok(user);
        }catch(Exception e){
            return ResponseEntity.badRequest().body(e.getMessage());
        }
@@ -43,7 +45,8 @@ public class UserController {
         try{
             //kiểm tra thông tin đăng nhập
             // trả về token trong response
-            String token=userService.login(userLoginDTO.getPhoneNumber(),userLoginDTO.getPassword());
+            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
+            // Trả về token trong response
             return ResponseEntity.ok(token);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
