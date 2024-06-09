@@ -10,6 +10,7 @@ import com.pnt.shopapp.responses.ProductResponse;
 import com.pnt.shopapp.services.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -98,7 +99,22 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> getImageView(@PathVariable String imageName){
+       try{
+            Path imagePath = Paths.get("uploads"+imageName);
+           UrlResource resource = new UrlResource(imagePath.toUri());
+           if(resource.exists() || resource.isReadable()){
+               return ResponseEntity.ok()
+                       .contentType(MediaType.IMAGE_JPEG)
+                       .body(resource);
+           } else {
+               return ResponseEntity.notFound().build();
+           }
+       }catch(Exception e){
+            return ResponseEntity.notFound().build();
+       }
+    }
     @GetMapping("")
     public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         //Tao Pageable tu thong tin trang va gioi han
