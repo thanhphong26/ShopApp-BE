@@ -44,10 +44,12 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
-        return productRepository.findAll(pageRequest).map(ProductResponse::fromProduct);
+    public Page<ProductResponse> getAllProducts(String keyword,
+                                                Long categoryId, PageRequest pageRequest) {
+        Page<Product> productsPage;
+        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
     }
-
     @Override
     public Product updateProduct(long id, ProductDTO productDTO) throws Exception {
         Product existingProduct = getProductById(id);
@@ -63,7 +65,6 @@ public class ProductService implements IProductService{
         }
         return null;
     }
-
     @Override
     public void deleteProduct(long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
@@ -91,6 +92,4 @@ public class ProductService implements IProductService{
         }
         return productImageRepository.save(productImage);
     }
-
-
 }

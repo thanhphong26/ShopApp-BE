@@ -102,7 +102,7 @@ public class ProductController {
     @GetMapping("/images/{imageName}")
     public ResponseEntity<?> getImageView(@PathVariable String imageName){
        try{
-            Path imagePath = Paths.get("uploads"+imageName);
+            Path imagePath = Paths.get("uploads/"+imageName);
            UrlResource resource = new UrlResource(imagePath.toUri());
            if(resource.exists() || resource.isReadable()){
                return ResponseEntity.ok()
@@ -116,17 +116,20 @@ public class ProductController {
        }
     }
     @GetMapping("")
-    public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+    public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam(defaultValue = "") String keyword,
+                                                              @RequestParam(defaultValue = "0", name="category_id") Long categoryId,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int limit) {
         //Tao Pageable tu thong tin trang va gioi han
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
-        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Page<ProductResponse> productPage = productService.getAllProducts(keyword,categoryId,pageRequest);
         //Lay tong so trang
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
         return ResponseEntity.ok(ProductListResponse
                 .builder()
                 .products(products)
-                .totalPage(totalPages)
+                .totalPages(totalPages)
                 .build());
     }
 
