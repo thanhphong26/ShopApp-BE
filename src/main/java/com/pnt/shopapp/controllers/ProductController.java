@@ -101,25 +101,29 @@ public class ProductController {
     }
     @GetMapping("/images/{imageName}")
     public ResponseEntity<?> getImageView(@PathVariable String imageName){
-       try{
-            Path imagePath = Paths.get("uploads/"+imageName);
-           UrlResource resource = new UrlResource(imagePath.toUri());
-           if(resource.exists() || resource.isReadable()){
-               return ResponseEntity.ok()
-                       .contentType(MediaType.IMAGE_JPEG)
-                       .body(resource);
-           } else {
-               return ResponseEntity.notFound().build();
-           }
-       }catch(Exception e){
+        try {
+            java.nio.file.Path imagePath = Paths.get("uploads/"+imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(new UrlResource(Paths.get("uploads/notfound.jpg").toUri()));
+                //return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
-       }
+        }
     }
     @GetMapping("")
-    public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam(defaultValue = "") String keyword,
-                                                              @RequestParam(defaultValue = "0", name="category_id") Long categoryId,
-                                                              @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int limit) {
+    public ResponseEntity<ProductListResponse> getAllProducts( @RequestParam(defaultValue = "") String keyword,
+                                                               @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int limit) {
         //Tao Pageable tu thong tin trang va gioi han
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").ascending());
         Page<ProductResponse> productPage = productService.getAllProducts(keyword,categoryId,pageRequest);
