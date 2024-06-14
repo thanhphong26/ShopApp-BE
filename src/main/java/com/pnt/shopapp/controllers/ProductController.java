@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -159,6 +160,20 @@ public class ProductController {
         try {
             Product product = productService.getProductById(productId);
             return ResponseEntity.ok(ProductResponse.fromProduct(product));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping("/by-ids")
+    public ResponseEntity<?> getProductsByIds(@RequestParam("ids") String ids) {
+        //eg: 1,3,5,7
+        try {
+            // Tách chuỗi ids thành một mảng các số nguyên
+            List<Long> productIds = Arrays.stream(ids.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            List<Product> products = productService.findProductsByIds(productIds);
+            return ResponseEntity.ok(products);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

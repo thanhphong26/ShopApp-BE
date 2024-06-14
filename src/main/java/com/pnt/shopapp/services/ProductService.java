@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,7 +47,10 @@ public class ProductService implements IProductService{
         }
         throw new DataNotFoundException("Cannot find product with id =" + id);
     }
-
+    @Override
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productRepository.findProductsByIds(productIds);
+    }
     @Override
     public Page<ProductResponse> getAllProducts(String keyword,
                                                 Long categoryId, PageRequest pageRequest) {
