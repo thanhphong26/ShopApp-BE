@@ -40,7 +40,8 @@ public class WebSecurityConfig {
                                     String.format("%s/users/login", apiPrefix)
                             )
                             .permitAll()
-
+                            .requestMatchers(POST,
+                                    String.format("%s/email/send", apiPrefix)).permitAll()
                             .requestMatchers(GET,
                                     String.format("%s/roles**", apiPrefix)).permitAll()
 

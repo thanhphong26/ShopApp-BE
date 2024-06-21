@@ -20,6 +20,21 @@ spring:
     basename: i18n/messages
     encoding: UTF-8
     default-locale: en
+  thymeleaf:
+    prefix: classpath:/mail-templates/
+    suffix: .html
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: phong.nguyenthanh2601@gmail.com
+    password: whgo enct pejr cpkj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    debug: false
 api:
   prefix: api/v1
 logging:

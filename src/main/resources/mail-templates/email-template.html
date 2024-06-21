@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recruitment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
+        p {
+            color: #555555;
+            line-height: 1.6;
+        }
+        .job-listing {
+            margin: 20px 0;
+        }
+        .job {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .job-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333333;
+        }
+        .job-details {
+            font-size: 14px;
+            color: #777777;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #999999;
+            font-size: 12px;
+        }
+        .apply-button {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #ffffff;
+            background-color: #28a745;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .apply-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Recruitment Opportunities</h1>
+        <p>Dear<span th:text="${name}"></span>,</p>
+        <p>We are excited to share with you the latest job opportunities that match your profile. Please find the details below:</p>
+
+        <div class="job-listing">
+            <div class="job">
+                <div class="job-title">[Job Title 1]</div>
+                <div class="job-details">
+                    <p><strong>Company:</strong> [Company 1]</p>
+                    <p><strong>Location:</strong> [Location 1]</p>
+                    <p><strong>Description:</strong> [Job Description 1]</p>
+                    <p><a href="[Apply Link 1]" class="apply-button">Apply Now</a></p>
+                </div>
+            </div>
+            <div class="job">
+                <div class="job-title">[Job Title 2]</div>
+                <div class="job-details">
+                    <p><strong>Company:</strong> [Company 2]</p>
+                    <p><strong>Location:</trong> [Location 2]</p>
+                    <p><strong>Description:</strong> [Job Description 2]</p>
+                    <p><a href="[Apply Link 2]" class="apply-button">Apply Now</a></p>
+                </div>
+            </div>
+            <!-- Add more job listings as needed -->
+        </div>
+        <p th:text="${message}"></p>
+<!--        <p>If you are interested in any of these positions, please click the "Apply Now" button to submit your application.</p>-->
+        <p>Best regards,</p>
+        <p>[Your Company]</p>
+
+        <div class="footer">
+            <p>&copy; 2024 [Your Company]. All rights reserved.</p>
+            <p>123 Your Street, Your City, Your Country</p>
+            <p><a href="mailto:contact@yourcompany.com">contact@yourcompany.com</a></p>
+        </div>
+    </div>
+</body>
+</html>
