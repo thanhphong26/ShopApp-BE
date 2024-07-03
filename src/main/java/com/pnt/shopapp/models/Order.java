@@ -1,11 +1,14 @@
 package com.pnt.shopapp.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+
 @Entity
 @Table(name = "orders")
 @Getter
@@ -32,7 +35,7 @@ public class Order {
     private String note;
 
     @Column(name = "order_date")
-    private Date orderDate;
+    private LocalDate orderDate;
     @Column(name = "status")
     private String oderStatus;
     @Column(name = "total_money")
@@ -49,4 +52,7 @@ public class Order {
     private String trackingNumber;
     @Column(name="payment_method", length=100)
     private String paymentMethod;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderDetail> orderDetails;
 }

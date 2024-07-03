@@ -21,7 +21,6 @@ public class EmailController {
         Context context = new Context();
         context.setVariable("name", emailRequest.getName());
         context.setVariable("message", emailRequest.getMessage());
-
         try {
             emailService.sendMessageHtml(emailRequest.getTo(), emailRequest.getSubject(), "email-template", context);
             return ResponseEntity.ok("Email sent successfully!");

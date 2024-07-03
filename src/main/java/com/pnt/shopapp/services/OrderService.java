@@ -1,11 +1,12 @@
 package com.pnt.shopapp.services;
 
+import com.pnt.shopapp.dtos.CartItemDTO;
 import com.pnt.shopapp.dtos.OrderDTO;
 import com.pnt.shopapp.exceptions.DataNotFoundException;
-import com.pnt.shopapp.models.Order;
-import com.pnt.shopapp.models.OrderStatus;
-import com.pnt.shopapp.models.User;
+import com.pnt.shopapp.models.*;
+import com.pnt.shopapp.repositories.OrderDetailRepository;
 import com.pnt.shopapp.repositories.OrderRepository;
+import com.pnt.shopapp.repositories.ProductRepository;
 import com.pnt.shopapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Or;
@@ -13,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +23,8 @@ import java.util.List;
 public class OrderService implements IOrderService{
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -37,7 +41,7 @@ public class OrderService implements IOrderService{
         Order order=new Order();
         modelMapper.map(orderDTO, order);
         order.setUser(user);
-        order.setOrderDate(new Date());//lấy thời điểm hiện tại
+        order.setOrderDate(LocalDate.now());//lấy thời điểm hiện tại
         order.setOderStatus(OrderStatus.PENDING);
         //kiểm tra shipping date phải >= ngày hôm nay
         LocalDate shippingDate=orderDTO.getShippingDate()==null
@@ -48,6 +52,24 @@ public class OrderService implements IOrderService{
         order.setShippingDate(shippingDate);
         order.setActive(true);
         orderRepository.save(order);
+        // Tạo danh sách các đối tượng OrderDetail từ cartItems
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for(CartItemDTO cartItemDTO: orderDTO.getCartItems()){
+            OrderDetail orderDetail=new OrderDetail();
+            orderDetail.setOrder(order);
+            // Lấy thông tin sản phẩm từ cartItemDTO
+            Long productId = cartItemDTO.getProductId();
+            int quantity = cartItemDTO.getQuantity();
+            // Kiểm tra sản phẩm có tồn tại không
+            Product product=productRepository.findById(productId)
+                    .orElseThrow(()->new DataNotFoundException("Cannot find product with id: "+productId));
+            orderDetail.setProduct(product);
+            orderDetail.setQuantity(quantity);
+            orderDetail.setPrice(product.getPrice());
+            orderDetails.add(orderDetail);
+        }
+        //Luu danh sach orderDetail
+        orderDetailRepository.saveAll(orderDetails);
         return order;
     }
 

@@ -3,6 +3,7 @@ package com.pnt.shopapp.controllers;
 import com.pnt.shopapp.dtos.OrderDTO;
 import com.pnt.shopapp.exceptions.DataNotFoundException;
 import com.pnt.shopapp.models.Order;
+import com.pnt.shopapp.responses.OrderResponse;
 import com.pnt.shopapp.services.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +36,12 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getOrderById(@Valid @PathVariable("id") Long id) {
         try {
             Order orders = orderService.getOrder(id);
-            return ResponseEntity.ok(orders);
+            OrderResponse orderResponse=OrderResponse.fromOrder(orders);
+            return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

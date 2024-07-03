@@ -2,8 +2,10 @@ package com.pnt.shopapp.services;
 
 import com.pnt.shopapp.components.JwtTokenUtil;
 import com.pnt.shopapp.components.LocalizationUtils;
+import com.pnt.shopapp.dtos.UpdateUserDTO;
 import com.pnt.shopapp.dtos.UserDTO;
 import com.pnt.shopapp.exceptions.DataNotFoundException;
+import com.pnt.shopapp.exceptions.ExpiredTokenException;
 import com.pnt.shopapp.exceptions.PermissionDenyException;
 import com.pnt.shopapp.models.Role;
 import com.pnt.shopapp.models.User;
@@ -11,12 +13,15 @@ import com.pnt.shopapp.repositories.RoleRepository;
 import com.pnt.shopapp.repositories.UserRepository;
 import com.pnt.shopapp.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -80,7 +85,9 @@ public class UserService implements IUserService{
         if (optionalRole.isEmpty()||!roleId.equals(existingUser.getRole().getId())) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
         }
-
+        if(!user.get().isActive()){
+            throw new PermissionDenyException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
+        }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 phoneNumber, password,
                 existingUser.getAuthorities()
@@ -88,5 +95,60 @@ public class UserService implements IUserService{
         //authentication with java spring
         authenticationManager.authenticate(authenticationToken);
         return jwtToken.generateToken(existingUser);
+    }
+
+    @Override
+    public User getUserDetailsFromToken(String token) throws Exception {
+        if(jwtToken.isTokenExpired(token)){
+            throw new ExpiredTokenException(localizationUtils.getLocalizedMessage(MessageKeys.TOKEN_EXPIRED));
+        }
+        String phoneNumber = jwtToken.extractPhoneNumber(token);
+        Optional<User> user;
+        user=userRepository.findByPhoneNumber(phoneNumber);
+        if(user.isPresent()){
+            return user.get();
+        }
+        else {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_NOT_FOUND));
+        }
+    }
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User updateUser(Long id, UpdateUserDTO updateUserDTO) throws DataNotFoundException {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_NOT_FOUND));
+        }
+        // Check if the phone number is being changed and if it already exists for another user
+        User user = optionalUser.get();
+        String newPhoneNumber = updateUserDTO.getPhoneNumber();
+        if (!user.getPhoneNumber().equals(newPhoneNumber) &&
+                userRepository.existsByPhoneNumber(newPhoneNumber)) {
+            throw new DataIntegrityViolationException("Phone number already exists");
+        }
+        if (Objects.nonNull(updateUserDTO.getFullName())) {
+            user.setFullName(updateUserDTO.getFullName());
+        }
+        if (Objects.nonNull(updateUserDTO.getAddress())) {
+            user.setAddress(updateUserDTO.getAddress());
+        }
+        if (Objects.nonNull(updateUserDTO.getDateOfBirth())) {
+            user.setDateOfBirth(updateUserDTO.getDateOfBirth());
+        }
+        if (updateUserDTO.getFacebookAccountId()>0) {
+            user.setFacebookAccountId(updateUserDTO.getFacebookAccountId());
+        }
+        if (updateUserDTO.getGoogleAccountId()>0) {
+            user.setGoogleAccountId(updateUserDTO.getGoogleAccountId());
+        }
+        if(updateUserDTO.getPassword()!=null && !updateUserDTO.getPassword().isEmpty()){
+            String encodedPassword = passwordEncoder.encode(updateUserDTO.getPassword());
+            user.setPassword(encodedPassword);
+        }
+        return userRepository.save(user);
     }
 }

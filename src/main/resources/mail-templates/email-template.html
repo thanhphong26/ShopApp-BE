@@ -64,45 +64,53 @@
         .apply-button:hover {
             background-color: #218838;
         }
+        .banner-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Job Recruitment Opportunities</h1>
-        <p>Dear<span th:text="${name}"></span>,</p>
-        <p>We are excited to share with you the latest job opportunities that match your profile. Please find the details below:</p>
+<div class="container">
+    <img src="baner.png" alt="Banner Image" class="banner-image">
+    <h1>Job Recruitment Opportunities</h1>
+    <p>Dear<span th:text="${name}"></span>,</p>
+    <p>We are excited to share with you the latest job opportunities that match your profile. Please find the details below:</p>
 
-        <div class="job-listing">
-            <div class="job">
-                <div class="job-title">[Job Title 1]</div>
-                <div class="job-details">
-                    <p><strong>Company:</strong> [Company 1]</p>
-                    <p><strong>Location:</strong> [Location 1]</p>
-                    <p><strong>Description:</strong> [Job Description 1]</p>
-                    <p><a href="[Apply Link 1]" class="apply-button">Apply Now</a></p>
-                </div>
+    <div class="job-listing">
+        <div class="job">
+            <div class="job-title">[Job Title 1]</div>
+            <div class="job-details">
+                <p><strong>Company:</strong> [Company 1]</p>
+                <p><strong>Location:</strong> [Location 1]</p>
+                <p><strong>Description:</strong> [Job Description 1]</p>
+                <p><a href="[Apply Link 1]" class="apply-button">Apply Now</a></p>
             </div>
-            <div class="job">
-                <div class="job-title">[Job Title 2]</div>
-                <div class="job-details">
-                    <p><strong>Company:</strong> [Company 2]</p>
-                    <p><strong>Location:</trong> [Location 2]</p>
-                    <p><strong>Description:</strong> [Job Description 2]</p>
-                    <p><a href="[Apply Link 2]" class="apply-button">Apply Now</a></p>
-                </div>
+        </div>
+        <div class="job">
+            <div class="job-title">[Job Title 2]</div>
+            <div class="job-details">
+                <p><strong>Company:</strong> [Company 2]</p>
+                <p><strong>Location:</strong> [Location 2]</p>
+                <p><strong>Description:</strong> [Job Description 2]</p>
+                <p><a href="[Apply Link 2]" class="apply-button">Apply Now</a></p>
             </div>
-            <!-- Add more job listings as needed -->
         </div>
-        <p th:text="${message}"></p>
-<!--        <p>If you are interested in any of these positions, please click the "Apply Now" button to submit your application.</p>-->
-        <p>Best regards,</p>
-        <p>[Your Company]</p>
-
-        <div class="footer">
-            <p>&copy; 2024 [Your Company]. All rights reserved.</p>
-            <p>123 Your Street, Your City, Your Country</p>
-            <p><a href="mailto:contact@yourcompany.com">contact@yourcompany.com</a></p>
-        </div>
+        <!-- Add more job listings as needed -->
     </div>
+    <p th:text="${message}"></p>
+    <!--        <p>If you are interested in any of these positions, please click the "Apply Now" button to submit your application.</p>-->
+    <p>Best regards,</p>
+    <p>[Your Company]</p>
+
+    <div class="footer">
+        <p>&copy; 2024 [Your Company]. All rights reserved.</p>
+        <p>123 Your Street, Your City, Your Country</p>
+        <p><a href="mailto:contact@yourcompany.com">contact@yourcompany.com</a></p>
+    </div>
+</div>
 </body>
 </html>
