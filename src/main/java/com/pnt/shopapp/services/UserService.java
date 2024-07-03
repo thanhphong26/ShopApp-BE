@@ -12,6 +12,7 @@ import com.pnt.shopapp.models.User;
 import com.pnt.shopapp.repositories.RoleRepository;
 import com.pnt.shopapp.repositories.UserRepository;
 import com.pnt.shopapp.utils.MessageKeys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -118,6 +119,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public User updateUser(Long id, UpdateUserDTO updateUserDTO) throws DataNotFoundException {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
