@@ -7,6 +7,7 @@ import com.pnt.shopapp.models.Product;
 import com.pnt.shopapp.models.ProductImage;
 import com.pnt.shopapp.responses.ProductListResponse;
 import com.pnt.shopapp.responses.ProductResponse;
+import com.pnt.shopapp.responses.ResponseObject;
 import com.pnt.shopapp.services.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -121,23 +122,26 @@ public class ProductController {
         }
     }
     @GetMapping("")
-    public ResponseEntity<ProductListResponse> getAllProducts( @RequestParam(defaultValue = "") String keyword,
-                                                               @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
-                                                               @RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "10") int limit) {
+    public ResponseEntity<ResponseObject> getAllProducts(@RequestParam(defaultValue = "") String keyword,
+                                                         @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int limit) {
         //Tao Pageable tu thong tin trang va gioi han
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").ascending());
         Page<ProductResponse> productPage = productService.getAllProducts(keyword,categoryId,pageRequest);
         //Lay tong so trang
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
-        return ResponseEntity.ok(ProductListResponse
-                .builder()
+        ProductListResponse productListResponse = ProductListResponse.builder()
                 .products(products)
                 .totalPages(totalPages)
+                .build();
+        return ResponseEntity.ok().body(ResponseObject.builder()
+                .message("Get all products successfully")
+                .status(HttpStatus.OK)
+                .data(productListResponse)
                 .build());
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long productId, @Valid @RequestBody ProductDTO productDTO, BindingResult result) {
         try {

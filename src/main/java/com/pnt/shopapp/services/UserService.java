@@ -148,6 +148,9 @@ public class UserService implements IUserService{
             user.setGoogleAccountId(updateUserDTO.getGoogleAccountId());
         }
         if(updateUserDTO.getPassword()!=null && !updateUserDTO.getPassword().isEmpty()){
+            if(!updateUserDTO.getPassword().equals(updateUserDTO.getRetypedPassword())){
+                throw new DataIntegrityViolationException(localizationUtils.getLocalizedMessage(MessageKeys.PASSWORD_NOT_MATCH));
+            }
             String encodedPassword = passwordEncoder.encode(updateUserDTO.getPassword());
             user.setPassword(encodedPassword);
         }

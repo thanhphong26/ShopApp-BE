@@ -31,7 +31,7 @@ public class OrderDetailService implements IOrderDetailService{
                 .product(product)
                 .quantity(orderDetailDTO.getQuantity())
                 .price(orderDetailDTO.getPrice())
-                .totalMoney(orderDetailDTO.getTotalMoney())
+                .totalMoney(orderDetailDTO.getQuantity() * product.getPrice())
                 .color(orderDetailDTO.getColor())
                 .build();
         return orderDetailRepository.save(orderDetail);

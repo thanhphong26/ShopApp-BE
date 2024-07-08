@@ -18,6 +18,8 @@ public class UpdateUserDTO {
     private String address;
     @JsonProperty("password")
     private String password;
+    @JsonProperty("retyped_password")
+    private String retypedPassword;
     @JsonProperty("date_of_birth")
     private Date dateOfBirth;
     @JsonProperty("facebook_account_id")
