@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class OrderDetailController {
 
     }
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO, BindingResult result){
         try{
             if(result.hasErrors()){
@@ -53,6 +55,7 @@ public class OrderDetailController {
         return ResponseEntity.ok(orderDetailResponses);
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateOrderDetail(@Valid @PathVariable("id") Long id, @Valid @RequestBody OrderDetailDTO orderDetailDTO){
         try{
             OrderDetail orderDetail=iOrderDetailService.updateOrderDetail(id, orderDetailDTO);
@@ -62,6 +65,7 @@ public class OrderDetailController {
         }
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<?> deleteOrderDetail(@Valid @PathVariable("id") Long id){
         iOrderDetailService.deleteById(id);
         return ResponseEntity.ok("Delete orderDetail with id="+ id);

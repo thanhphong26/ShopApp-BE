@@ -8,6 +8,7 @@ import com.pnt.shopapp.services.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class OrderController {
     private final IOrderService orderService;
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
@@ -58,6 +60,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateOrders(@Valid @PathVariable Long id, @Valid @RequestBody OrderDTO orderDTO, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
@@ -74,6 +77,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteOrder(@Valid @PathVariable Long id) {
         //xoa mem -> update activity=false
         orderService.deleteOrder(id);

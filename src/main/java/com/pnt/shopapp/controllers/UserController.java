@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,7 @@ public class UserController {
         }
     }
     @PostMapping("/details")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<UserResponse> getDetailUser(@RequestHeader("Authorization") String token){
         try{
             String extractedToken = token.substring(7); // Loại bỏ "Bearer " từ chuỗi token
@@ -88,6 +90,7 @@ public class UserController {
         }
     }
     @PutMapping("/update-infor")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<UserResponse> updateUserDetail(@RequestHeader("Authorization") String authorizationToken,
                                                          @Valid @RequestBody UpdateUserDTO updateUserDTO, BindingResult result){
       try{

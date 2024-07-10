@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -40,6 +41,7 @@ public class ProductController {
     private final IProductService productService;
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> insertProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
@@ -57,6 +59,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> uploadImages(@PathVariable("id") Long productId,
                                           @ModelAttribute("files") List<MultipartFile> files) {
         try {
@@ -112,7 +115,7 @@ public class ProductController {
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(resource);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(new UrlResource(Paths.get("uploads/notfound.jpg").toUri()));
                 //return ResponseEntity.notFound().build();
@@ -143,6 +146,7 @@ public class ProductController {
                 .build());
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long productId, @Valid @RequestBody ProductDTO productDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
@@ -184,6 +188,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteProductByID(@PathVariable Long id) {
         try {
             productService.deleteProduct(id);
@@ -217,6 +222,7 @@ public class ProductController {
     ));
 
     @PostMapping("/generateFakeProducts")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> generateFakeProducts() {
         Faker faker = new Faker();
         for (int i = 0; i < 500; i++) {

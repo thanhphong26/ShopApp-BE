@@ -36,11 +36,18 @@ spring:
             enable: true
     debug: false
 api:
-  prefix: api/v1
+  prefix: /api/v1
 logging:
   level:
     root: info
 jwt:
   expiration: 2592000
   secretKey: eapsM0qzCND33dp7alzC/tKpFmm98TANq7ESjATtyA0=
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+  show-actuator: true
 
