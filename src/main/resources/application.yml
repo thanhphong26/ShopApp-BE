@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/shopapp
+    url: ${DATABASE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 15242635
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
